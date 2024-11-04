@@ -36,10 +36,26 @@ void display(){
     
 }
 
+//Function to insert node at the begining
+void insert_begin(){
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    printf("Enter the data for the new node\n");
+    scanf("%d",&newNode->data);
+    newNode->next = NULL;
+    if(head == NULL){
+        head = newNode;
+        return;
+    }else{
+        newNode->next = head;
+        head = newNode;
+    
+    }
+}
+
 int main(){
 int choice;
 
-while (1)
+while (choice!=8)
 {
 printf("\n*****\n");
 printf("0. Create\n");
@@ -61,9 +77,9 @@ case 0:
 case 1: 
     display();
     break;
-// case 2: 
-//     insert_begin();
-//     break;
+case 2: 
+    insert_begin();
+    break;
 // case 3: 
 //     insert_pos();
 //     break;
