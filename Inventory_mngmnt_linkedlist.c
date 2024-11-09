@@ -10,40 +10,97 @@ struct Item{
     int quantity;
     struct Item* next;
 };
+struct Item* head = NULL;
 
-void addItem(struct Item* head, char* name, int quantity){
+void addItem(struct Item** head, char* name, int quantity){
     struct Item* newItem = (struct Item*)malloc(sizeof(struct Item));
     printf("Enetr the name of the product\n");
     scanf("%s",name);
     printf("Enter the quantity of the product\n");
     scanf("%d",&quantity);
+
+    //copy input name and quantity
+    strncpy(newItem->itemName,name,NAME_LENGTH);
+    newItem->quantity = quantity;
     
     newItem->next = NULL;
-    // check if the inventory is empty
    if(!newItem){
     printf("Memory allocation failed\n");
    }
-    strcpy(newItem->itemName, name);
-    newItem->quantity = quantity;
-    newItem->next = head;
-    printf("Item added successfully\n");
+    // check if the inventory is empty
+    if(*head == NULL){
+        *head = newItem;
+    }
+    else{
+        struct Item* current = *head;
+        while(current->next != NULL){
+            current = current->next;
+        }
+        current->next = newItem;
+       
+    }
+     printf("Item Added sucefully\n");
+
+    
 
 }
 
 void displayItems(struct Item* head){
     struct Item* current = head;
-    while(current->next != NULL){
-        printf("Name: %c Qantity: %d\n",current->itemName,current->quantity);
+    while(current != NULL){
+        printf("Name: %s\t Qantity: %d\n\n",current->itemName,current->quantity);
         current = current->next;
     }
+    printf("The inventory is Empty\n");
 }
+
+void deleteItem(struct Item** head) {
+    if (*head == NULL) {
+        printf("The inventory is empty.\n");
+        return;
+    }
+
+    printf("Enter the name of the product to delete: ");
+    char name[NAME_LENGTH];
+    scanf("%s", name);
+
+    struct Item* current = *head;
+    struct Item* previous = NULL;
+
+    // Check if the item to delete is the first item
+    if (strcmp(current->itemName, name) == 0) {
+        *head = current->next; // Update head to point to the next item
+        free(current);
+        printf("Item deleted successfully.\n");
+        return;
+    }
+
+    // Traverse the list to find the item
+    while (current != NULL && strcmp(current->itemName, name) != 0) {
+        previous = current;
+        current = current->next;
+    }
+
+    // If item not found
+    if (current == NULL) {
+        printf("Item not found.\n");
+        return;
+    }
+
+    // Update the previous node's next pointer
+    previous->next = current->next;
+    free(current);
+    printf("Item deleted successfully.\n");
+}
+
+
 
 
 
 
 // Main function with a menu to manage the inventory
 int main() {
-struct Item* head = NULL;
+
 int choice;
 char name[NAME_LENGTH];
 int quantity;
@@ -61,11 +118,15 @@ scanf("%d", &choice);
 
 switch(choice){
     case 1:
-    addItem(head, name, quantity);
+    addItem(&head, name, quantity);
     break;
 
     case 2:
     displayItems(head);
+    break;
+
+    case 3:
+    deleteItem(&head);
     break;
 
     case 7:
