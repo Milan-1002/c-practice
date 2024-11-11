@@ -46,12 +46,16 @@ void addItem(struct Item** head, char* name, int quantity){
 }
 
 void displayItems(struct Item* head){
+    if(head == NULL){
+        printf("The inventory is empty\n");
+        return;
+    }
     struct Item* current = head;
     while(current != NULL){
         printf("Name: %s\t Qantity: %d\n\n",current->itemName,current->quantity);
         current = current->next;
     }
-    printf("The inventory is Empty\n");
+    
 }
 
 void deleteItem(struct Item** head) {
@@ -93,6 +97,64 @@ void deleteItem(struct Item** head) {
     printf("Item deleted successfully.\n");
 }
 
+void updateQuantity(struct Item** head){
+    // check if the list is empty
+    if(head == NULL){
+        printf("The list is empty\n");
+        return;
+    }
+
+    struct Item* current = *head;
+    printf("Enter the name of product to update the quantity\n");
+    char name[NAME_LENGTH];
+    scanf("%s",name);
+    printf("Enter the new Quantity\n");
+    int quantity;
+    scanf("%d",&quantity);
+    while (current != NULL && strcmp(current->itemName, name) != 0) {
+        current = current->next;
+    }
+
+    // check if the item was not found
+    if(current == NULL){
+        printf("The Item is not found\n");
+        return;
+    }
+    // update the quantity
+    current->quantity = quantity;
+    printf("Quantity updated successfully\n");
+}
+
+void searchItem(struct Item* head){
+    struct Item* current = head;
+    char name[NAME_LENGTH];
+    printf("Enter the name of the product to search\n");
+    scanf("%s",name);
+    while(current != NULL && strcmp(current->itemName, name) != 0){
+        current = current->next;
+    }
+    if(current == NULL){
+        printf("The Item was not found\n");
+        return;
+    }
+    printf("Item found\n\n");
+    printf("Name: %s    Quantity: %d\n",current->itemName,current->quantity);
+
+
+}
+
+void clearInventory(struct Item** head){
+    struct Item* current = *head;
+    while(*head != NULL){
+        current = *head;
+        *head = (*head)->next;
+        free(current);
+
+    }
+    *head = NULL;
+    printf("Inventory cleared!!!\n");
+}
+
 
 
 
@@ -129,6 +191,18 @@ switch(choice){
     deleteItem(&head);
     break;
 
+    case 4:
+    updateQuantity(&head);
+    break;
+
+    case 5:
+    searchItem(head);
+    break;
+
+    case 6:
+    clearInventory(&head);
+    break;
+
     case 7:
     exit(0);
 
@@ -136,4 +210,5 @@ switch(choice){
 }
 
 }
+
 }
